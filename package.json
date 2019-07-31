@@ -1,0 +1,31 @@
+{
+  "name": "deip-state-integrator",
+  "version": "0.0.1",
+  "description": "Integrator of DEIP blockchain state to popular blockchain networks",
+  "engines": {
+    "node": "8.11.1"
+  },
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node --expose-gc src/app.js",
+    "development": "NODE_ENV=development nodemon src/app.js",
+    "lint": "eslint src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@deip/deip-rpc-client": "^1.0.55",
+    "app-module-path": "2.2.0",
+    "dotenv": "8.0.0",
+    "ethereumjs-tx": "2.1.0",
+    "lodash": "4.17.15",
+    "node-schedule": "1.3.2",
+    "web3": "1.2.0",
+    "winston": "3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "6.1.0",
+    "eslint-config-airbnb-base": "13.2.0",
+    "eslint-plugin-import": "2.18.2",
+    "nodemon": "1.19.1"
+  }
+}
