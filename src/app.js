@@ -9,4 +9,5 @@ deipRPC.config.set('chain_id', config.deipBlockchain.chainId);
 
 require('scheduler');
 
+logger.info(`Loaded config: ${JSON.stringify(config, null, 2)}`);
 logger.info(`App is run in ${config.environment} mode`);
