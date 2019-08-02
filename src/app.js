@@ -3,7 +3,7 @@ const config = require('config');
 const deipRPC = require('@deip/deip-rpc-client');
 const logger = require('logger');
 
-// deipRPC is a singleton and should be configure for whole app
+// deipRPC is a singleton and should be configured for whole app
 deipRPC.api.setOptions({ url: config.deipBlockchain.rpcEndpoint });
 deipRPC.config.set('chain_id', config.deipBlockchain.chainId);
 

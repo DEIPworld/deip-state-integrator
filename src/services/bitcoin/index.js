@@ -64,20 +64,16 @@ const buildTransactionHex = async (data) => {
 const sendRawTransaction = async (tx) => {
   try {
     const { data } = await axios.post(`${btcBlockchainProvider}/txs/push`, JSON.stringify({ tx }));
-    return data.tx.hash;
+    logger.info(`Sent to Bitcoin in transaction ${data.tx.hash}`);
   } catch (err) {
     logger.error(err.stack);
-    return null;
   }
 };
 
 module.exports.sendDataInTransaction = async (data) => {
   try {
     const tx = await buildTransactionHex(data);
-    const txHash = await sendRawTransaction(tx);
-    if (txHash) {
-      logger.info(`Sent to Bitcoin in transaction ${txHash};\nData: ${data}`);
-    }
+    await sendRawTransaction(tx);
   } catch (err) {
   }
 };

@@ -34,7 +34,7 @@ module.exports.sendDataInTransaction = async (data) => {
       gasUsed,
       transactionHash,
     } = await web3.eth.sendSignedTransaction(`0x${transaction.serialize().toString('hex')}`);
-    logger.info(`Sent to Ethereum in transaction ${transactionHash};\nData: ${data}\nGas used: ${gasUsed}`);
+    logger.info(`Sent to Ethereum in transaction ${transactionHash}; Gas used: ${gasUsed}`);
   } catch (err) {
     logger.error(err.stack);
   }
