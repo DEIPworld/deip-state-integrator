@@ -1,6 +1,7 @@
 const config = require('config');
 const deipRPC = require('@deip/deip-rpc-client');
 const ethRPC = require('services/ethereum');
+const btcRPC = require('services/bitcoin');
 
 const cron = require('../cron');
 const { CRON_EVENTS } = require('../constants');
@@ -14,6 +15,7 @@ const deipStateIntegrationJob = async () => {
   });
 
   await ethRPC.sendDataInTransaction(dataToIntegrate);
+  await btcRPC.sendDataInTransaction(dataToIntegrate);
 };
 
 cron.on(CRON_EVENTS.EVERY_DAY, deipStateIntegrationJob);

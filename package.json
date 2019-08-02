@@ -8,13 +8,15 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node --expose-gc src/app.js",
-    "development": "NODE_ENV=development nodemon src/app.js",
+    "development": "NODE_ENV=development nodemon --delay 2500ms src/app.js",
     "lint": "eslint src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@deip/deip-rpc-client": "^1.0.55",
     "app-module-path": "2.2.0",
+    "axios": "0.19.0",
+    "bitcoinjs-lib": "5.1.2",
     "dotenv": "8.0.0",
     "ethereumjs-tx": "2.1.0",
     "lodash": "4.17.15",

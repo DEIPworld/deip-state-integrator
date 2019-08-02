@@ -33,6 +33,10 @@ const config = _.merge(baseConfig, {
     address: process.env.ETHEREUM_ADDRESS,
     privateKey: process.env.ETHEREUM_PRIVATE_KEY,
   },
+  bitcoin: {
+    address: process.env.BITCOIN_ADDRESS,
+    wif: process.env.BITCOIN_WIF,
+  },
 });
 
 module.exports = config;
