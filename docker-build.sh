@@ -7,7 +7,7 @@ LATEST="latest"
 echo "Building deipworld/ip-protection-state-integrator image..."
 export IMAGE_NAME="deipworld/ip-protection-state-integrator:$TAG"
 export LATEST_IMAGE_NAME="deipworld/ip-protection-state-integrator:$LATEST"
-export NODE_ENV="development"
+export NODE_ENV="production"
 docker build -t=${IMAGE_NAME} .
 docker tag ${IMAGE_NAME} ${LATEST_IMAGE_NAME}
 docker push ${IMAGE_NAME}

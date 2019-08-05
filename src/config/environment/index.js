@@ -1,6 +1,7 @@
 const _ = require('lodash');
 
 const envToEnvFileNameMap = {
+  production: 'prod',
   development: 'dev',
   local: 'local',
 };
@@ -20,9 +21,11 @@ const baseConfig = {
   environment: env,
   envFileName,
   isDev: env === 'development',
+  isProd: env === 'production'
 };
 
 const config = _.merge(baseConfig, {
+  forceRecurrenceRule: process.env.FORCE_RECURRENCE_RULE,
   deipBlockchain: {
     rpcEndpoint: process.env.DEIP_FULL_NODE_URL,
     chainId: process.env.DEIP_CHAIN_ID,
