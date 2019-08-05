@@ -4,7 +4,8 @@ const { CRON_EVENTS } = require('./constants');
 
 const eventEmitter = new EventEmitter();
 
-schedule.scheduleJob('0 0 * * *', () => {
+// every 2 hours temporary for staging
+schedule.scheduleJob('0 */2 * * *', () => {
   eventEmitter.emit(CRON_EVENTS.EVERY_DAY);
 });
 
