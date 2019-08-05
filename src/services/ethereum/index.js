@@ -7,13 +7,24 @@ const web3 = new Web3(new Web3.providers.HttpProvider(config.ethereum.rpcProvide
 
 module.exports.sendDataInTransaction = async (data) => {
   try {
-    const transactionsCount = await web3.eth.getTransactionCount(config.ethereum.address);
-    const transaction = new EthereumTx({
+    const rawTransaction = {
       from: config.ethereum.address,
       to: config.ethereum.address,
       data: web3.utils.toHex(data),
-      gasPrice: web3.utils.toHex(web3.utils.toWei(config.ethereum.gasPrice, 'gwei')),
-      gas: web3.utils.toHex(config.ethereum.gasLimit),
+    };
+    const [
+      transactionsCount,
+      recommendedGasPrice,
+      estimatedGas,
+    ] = await Promise.all([
+      web3.eth.getTransactionCount(config.ethereum.address, 'pending'),
+      web3.eth.getGasPrice(),
+      web3.eth.estimateGas(rawTransaction),
+    ]);
+    const transaction = new EthereumTx({
+      ...rawTransaction,
+      gasPrice: web3.utils.toHex(recommendedGasPrice),
+      gas: web3.utils.toHex(estimatedGas),
       nonce: web3.utils.toHex(transactionsCount),
     }, {
       chain: config.ethereum.networkName,

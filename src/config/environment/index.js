@@ -18,6 +18,7 @@ require('dotenv').config({
 
 const baseConfig = {
   environment: env,
+  envFileName,
   isDev: env === 'development',
 };
 
@@ -31,12 +32,7 @@ const config = _.merge(baseConfig, {
     networkName: process.env.ETHEREUM_NETWORK_NAME,
     address: process.env.ETHEREUM_ADDRESS,
     privateKey: process.env.ETHEREUM_PRIVATE_KEY,
-    toAddress: process.env.ETHEREUM_TO_ADDRESS,
-    gasPrice: process.env.ETHEREUM_GAS_PRICE,
-    gasLimit: process.env.ETHEREUM_GAS_LIMIT,
   },
 });
 
-
-// console.log(`Loaded ${envFileName} config: ${JSON.stringify(config, null, 2)}`);
 module.exports = config;
