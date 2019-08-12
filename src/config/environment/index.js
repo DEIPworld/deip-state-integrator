@@ -35,6 +35,7 @@ const config = _.merge(baseConfig, {
     networkName: process.env.ETHEREUM_NETWORK_NAME,
     address: process.env.ETHEREUM_ADDRESS,
     privateKey: process.env.ETHEREUM_PRIVATE_KEY,
+    priceLimitUSD: +process.env.ETHEREUM_PRICE_LIMIT_USD || 1.0,
   },
   bitcoin: {
     address: process.env.BITCOIN_ADDRESS,
