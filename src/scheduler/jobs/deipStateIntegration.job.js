@@ -18,7 +18,7 @@ const deipStateIntegrationJob = async () => {
   logger.info(`Data to integrate: ${dataToIntegrate}`);
   await Promise.all([
     ethRPC.sendDataInTransaction(dataToIntegrate),
-    btcRPC.sendDataInTransaction(dataToIntegrate),
+    // btcRPC.sendDataInTransaction(dataToIntegrate),
   ]);
   logger.info('All integrations finished');
 };
