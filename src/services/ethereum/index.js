@@ -10,7 +10,7 @@ const getCurrentETHPriceUSD = async () => {
   try {
     return axios
       .get('https://api.coincap.io/v2/rates/ethereum')
-      .then(({ data }) => +data.data.rateUsd)
+      .then(({ data }) => +data.data.rateUsd);
   } catch (err) {
     logger.error(err.stack);
     return undefined;

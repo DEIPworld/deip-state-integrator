@@ -40,7 +40,7 @@ const config = _.merge(baseConfig, {
   bitcoin: {
     address: process.env.BITCOIN_ADDRESS,
     wif: process.env.BITCOIN_WIF,
-    fee: process.env.BITCOIN_FEE || 4000,
+    priceLimitUSD: process.env.BITCOIN_PRICE_LIMIT_USD || 1.0,
   },
 });
 
