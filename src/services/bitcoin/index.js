@@ -4,15 +4,14 @@ const axios = require('axios');
 const logger = require('logger');
 const _ = require('lodash');
 
-const network = btc.networks[config.isDev ? 'testnet' : 'bitcoin'];
-const btcBlockchainProvider = `https://api.blockcypher.com/v1/btc/${config.isDev ? 'test3' : 'main'}`;
-const FEE = 2000;
+const network = btc.networks[config.isProd ? 'bitcoin' : 'testnet'];
+const btcBlockchainProvider = `https://api.blockcypher.com/v1/btc/${config.isProd ? 'main' : 'test3'}`;
 
 const getUTXOByAddress = async (address) => {
   try {
     const lastTx = await axios
       .get(`${btcBlockchainProvider}/addrs/${address}?unspentOnly=true`)
-      .then(({ data }) => _.find(data.txrefs, tx => tx.tx_output_n > -1 && tx.value >= FEE));
+      .then(({ data }) => _.find(data.txrefs, tx => tx.tx_output_n > -1 && tx.value >= config.bitcoin.fee));
     if (!lastTx) return null;
 
     const txHex = await axios
@@ -53,7 +52,7 @@ const buildTransactionHex = async (data) => {
     })
     .addOutput({
       address: config.bitcoin.address,
-      value: utxo.value - FEE,
+      value: utxo.value - config.bitcoin.fee,
     })
     .signInput(0, keyPair);
   psbt.finalizeAllInputs();
@@ -75,5 +74,6 @@ module.exports.sendDataInTransaction = async (data) => {
     const tx = await buildTransactionHex(data);
     await sendRawTransaction(tx);
   } catch (err) {
+    logger.error(err.stack);
   }
 };
