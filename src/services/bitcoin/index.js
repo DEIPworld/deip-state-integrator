@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 const network = btc.networks[config.isDev ? 'testnet' : 'bitcoin'];
 const btcBlockchainProvider = `https://api.blockcypher.com/v1/btc/${config.isDev ? 'test3' : 'main'}`;
-const FEE = 1000;
+const FEE = 2000;
 
 const getUTXOByAddress = async (address) => {
   try {
