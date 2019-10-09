@@ -3,6 +3,7 @@ const deipRPC = require('@deip/deip-rpc-client');
 const ethRPC = require('services/ethereum');
 const btcRPC = require('services/bitcoin');
 const logger = require('logger');
+const ripemd160 = require('crypto-js/ripemd160');
 
 const cron = require('../cron');
 const { CRON_EVENTS } = require('../constants');
@@ -12,7 +13,7 @@ const deipStateIntegrationJob = async () => {
   const headBlockNumber = currentState.props.head_block_number;
   const headBlock = await deipRPC.api.getBlockAsync(headBlockNumber);
   const dataToIntegrate = JSON.stringify({
-    [headBlock.block_id]: `${headBlockNumber}_${config.deipBlockchain.chainId}`,
+    [headBlockNumber]: ripemd160(`${headBlock.block_id}_${config.deipBlockchain.chainId}`).toString()
   });
 
   logger.info(`Data to integrate: ${dataToIntegrate}`);

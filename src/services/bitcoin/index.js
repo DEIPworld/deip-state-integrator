@@ -3,10 +3,11 @@ const btc = require('bitcoinjs-lib');
 const axios = require('axios');
 const logger = require('logger');
 const _ = require('lodash');
-const ripemd160 = require('crypto-js/ripemd160');
 
 const network = btc.networks[config.isProd ? 'bitcoin' : 'testnet'];
 const btcBlockchainProvider = `https://api.blockcypher.com/v1/btc/${config.isProd ? 'main' : 'test3'}`;
+
+const MAX_OP_RETURN_BYTES = 80;
 
 const getCurrentBTCPriceUSD = async () => {
   try {
@@ -50,17 +51,21 @@ const calcTxFee = async () => {
   /**
    * https://bitcoin.stackexchange.com/questions/1195/how-to-calculate-transaction-size-before-sending-legacy-non-segwit-p2pkh-p2sh
    * https://bitcoin.org/en/transactions-guide#null-data
-   * for current purposes only 1 input, 2 outputs + max data size (40 bytes by protocol)
+   * for current purposes only 1 input, 2 outputs + max data size
    */
-  const txSize = 148 * 1 + 2 * 34 + 10 * 1 + 40;
+  const txSize = 148 * 1 + 2 * 34 + 10 * 1 + MAX_OP_RETURN_BYTES;
   return txSize * lowFeePerByte;
 };
 
 module.exports.sendDataInTransaction = async (dataToSend) => {
   try {
+    const ecnodedData = Buffer.from(dataToSend);
+    if (ecnodedData.length > MAX_OP_RETURN_BYTES) {
+      throw new Error('Data is too big');
+    }
+
     const keyPair = btc.ECPair.fromWIF(config.bitcoin.wif, network);
 
-    const ecnodedData = Buffer.from(ripemd160(dataToSend).toString());
     const { output } = btc.payments.embed({ data: [ecnodedData] });
 
     const [
