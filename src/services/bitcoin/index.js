@@ -3,6 +3,7 @@ const btc = require('bitcoinjs-lib');
 const axios = require('axios');
 const logger = require('logger');
 const _ = require('lodash');
+const ripemd160 = require('crypto-js/ripemd160');
 
 const network = btc.networks[config.isProd ? 'bitcoin' : 'testnet'];
 const btcBlockchainProvider = `https://api.blockcypher.com/v1/btc/${config.isProd ? 'main' : 'test3'}`;
@@ -41,19 +42,17 @@ const getUTXOByAddress = async (address, minValue = Number.MAX_SAFE_INTEGER) => 
   }
 };
 
-const calcTxFee = async (output) => {
-  const outputBuf = Buffer.from(output);
+const calcTxFee = async () => {
   const lowFeePerByte = await axios
     .get(btcBlockchainProvider)
     .then(({ data }) => Math.ceil(data.low_fee_per_kb / 1024));
 
   /**
    * https://bitcoin.stackexchange.com/questions/1195/how-to-calculate-transaction-size-before-sending-legacy-non-segwit-p2pkh-p2sh
-   * for current purposes only 1 inputs and 2 outputs; also have to add embedded data size and fault
-   * fault = 10 bytes per input + reserve (magic number)
+   * https://bitcoin.org/en/transactions-guide#null-data
+   * for current purposes only 1 input, 2 outputs + max data size (40 bytes by protocol)
    */
-  const FAULT = 10 * 1 + 50;
-  const txSize = 148 * 1 + 2 * 34 + FAULT + outputBuf.length;
+  const txSize = 148 * 1 + 2 * 34 + 10 * 1 + 40;
   return txSize * lowFeePerByte;
 };
 
@@ -61,14 +60,14 @@ module.exports.sendDataInTransaction = async (dataToSend) => {
   try {
     const keyPair = btc.ECPair.fromWIF(config.bitcoin.wif, network);
 
-    const ecnodedData = Buffer.from(dataToSend, 'utf8');
+    const ecnodedData = Buffer.from(ripemd160(dataToSend).toString());
     const { output } = btc.payments.embed({ data: [ecnodedData] });
 
     const [
       txFee,
       btcPriceUsd,
     ] = await Promise.all([
-      calcTxFee(output),
+      calcTxFee(),
       getCurrentBTCPriceUSD(),
     ]);
     const txPriceUsd = txFee * btcPriceUsd / 100000000; // txFee is in satoshis
