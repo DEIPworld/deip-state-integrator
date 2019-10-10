@@ -12,9 +12,7 @@ const deipStateIntegrationJob = async () => {
   const currentState = await deipRPC.api.getStateAsync('');
   const headBlockNumber = currentState.props.head_block_number;
   const headBlock = await deipRPC.api.getBlockAsync(headBlockNumber);
-  const dataToIntegrate = JSON.stringify({
-    [headBlockNumber]: ripemd160(`${headBlock.block_id}_${config.deipBlockchain.chainId}`).toString()
-  });
+  const dataToIntegrate = `${headBlockNumber}_${ripemd160(`${headBlock.block_id}_${config.deipBlockchain.chainId}`).toString()}`;
 
   logger.info(`Data to integrate: ${dataToIntegrate}`);
   await Promise.all([
